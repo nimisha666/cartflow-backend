@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-// const cors = require('cors');
+const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 require('dotenv').config();
@@ -15,11 +15,13 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// ✅ CORS Configuration
-// app.use(cors({
-//     origin: 'https://cartflow-ecommerce-hgwv-nimisha666s-projects.vercel.app/',
-//     credentials: true,
-// }));
+// ✅ CORS Configuration (Fix)
+app.use(cors({
+    origin: ['https://cartflow-ecommerce-hgwv-nimisha666s-projects.vercel.app', 'https://cartflow-ecommerce-hgwv-ia6icfl4p-nimisha666s-projects.vercel.app'],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE"], // Allow all necessary HTTP methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Allow necessary headers
+}));
 
 // ✅ Import Routes from a centralized file
 const routes = require('./src/routes');
