@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // ✅ CORS Configuration
 app.use(cors({
-    origin: 'http://localhost:5173',
+    origin: 'https://cartflow-backend-production.up.railway.app/',
     credentials: true,
 }));
 
