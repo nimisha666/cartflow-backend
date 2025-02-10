@@ -16,10 +16,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // ✅ CORS Configuration
-app.use(cors({
-    origin: 'https://cartflow-ecommerce-hgwv-nimisha666s-projects.vercel.app/',
-    credentials: true,
-}));
+// app.use(cors({
+//     origin: 'https://cartflow-ecommerce-hgwv-nimisha666s-projects.vercel.app/',
+//     credentials: true,
+// }));
 
 // ✅ Import Routes from a centralized file
 const routes = require('./src/routes');
