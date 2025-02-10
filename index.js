@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // ✅ CORS Configuration
 app.use(cors({
-    origin: 'https://cartflow-backend-production.up.railway.app/',
+    origin: 'https://cartflow-ecommerce-hgwv-nimisha666s-projects.vercel.app/',
     credentials: true,
 }));
 
