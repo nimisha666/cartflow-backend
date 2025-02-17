@@ -17,10 +17,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // ✅ CORS Configuration (Fix)
 app.use(cors({
-    origin: ['https://cartflow-ecommerce-hgwv-nimisha666s-projects.vercel.app', 'https://cartflow-ecommerce-hgwv-ia6icfl4p-nimisha666s-projects.vercel.app'],
-    credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"], // Allow all necessary HTTP methods
-    allowedHeaders: ["Content-Type", "Authorization"], // Allow necessary headers
+    origin: ['https://cartflow-ecommerce-hgwv-nimisha666s-projects.vercel.app', 'http://localhost:5173'],
+    credentials: true, // Allow cookies to be sent
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
 }));
 
 // ✅ Import Routes from a centralized file
