@@ -1,9 +1,9 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-require('dotenv').config();
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -15,20 +15,24 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// ✅ CORS Configuration (Fix)
+// ✅ CORS Configuration (Fixed)
 app.use(cors({
     origin: ['https://cartflow-ecommerce-hgwv-nimisha666s-projects.vercel.app', 'http://localhost:5173'],
     credentials: true, // Allow cookies to be sent
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
+    optionsSuccessStatus: 200, // Prevents CORS preflight issues
 }));
 
-// ✅ Import Routes from a centralized file
+// ✅ Import Routes (After Middleware)
 const routes = require('./src/routes');
-app.use('/api', routes);
+app.use('/api/auth', routes);
 
-// ✅ MongoDB Connection with Error Handling
+// ✅ MongoDB Connection with Retry Logic
 async function connectDB() {
+    console.log("🔹 Attempting to connect to MongoDB...");
+    console.log("🔹 DB URL:", process.env.DB_URL); // Debugging
+
     try {
         await mongoose.connect(process.env.DB_URL, {
             useNewUrlParser: true,
@@ -37,7 +41,8 @@ async function connectDB() {
         console.log("✅ MongoDB successfully connected.");
     } catch (error) {
         console.error("❌ MongoDB connection error:", error.message);
-        process.exit(1);
+        console.log("🔄 Retrying in 5 seconds...");
+        setTimeout(connectDB, 5000); // Retry after 5 seconds
     }
 }
 
