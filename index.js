@@ -15,7 +15,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// ✅ CORS Configuration (Fixed)
+// ✅ CORS Configuration
 app.use(cors({
     origin: ['https://cartflow-ecommerce-hgwv-nimisha666s-projects.vercel.app', 'http://localhost:5173'],
     credentials: true, // Allow cookies to be sent
@@ -23,10 +23,6 @@ app.use(cors({
     allowedHeaders: ["Content-Type", "Authorization"],
     optionsSuccessStatus: 200, // Prevents CORS preflight issues
 }));
-
-// ✅ Import Routes (After Middleware)
-const authRoutes = require('./src/users/user.route');
-app.use('/api/auth', authRoutes);
 
 // ✅ MongoDB Connection with Retry Logic
 async function connectDB() {
@@ -47,6 +43,18 @@ async function connectDB() {
 }
 
 connectDB();
+
+// ✅ Import Routes (After Middleware)
+const authRoutes = require('./src/users/user.route');
+const productRoutes = require('./src/products/products.route');
+const reviewRoutes = require('./src/reviews/reviews.router');
+const adminRoutes = require('./src/admin.routes');
+const orderRoutes = require('./src/orders/order.routes');
+
+// ✅ Use the imported routes
+const apiRouter = require('./src/routes/index');  // Import the main API routes file
+
+app.use('/api', apiRouter);  // This integrates your routes under /api
 
 // ✅ Root Route 
 app.get('/', (req, res) => {
