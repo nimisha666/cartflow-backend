@@ -4,15 +4,16 @@ const Reviews = require('../reviews/reviews.model');
 const verifyAdmin = require('../middleware/verifyAdmin');
 const router = express.Router();
 
-// post a product
+// Post a product
 router.post("/create-product", async (req, res) => {
     try {
         const newProduct = new Products({
             ...req.body
-        })
+        });
 
         const savedProduct = await newProduct.save();
-        // calculate review
+
+        // Calculate average rating if reviews exist
         const reviews = await Reviews.find({ productId: savedProduct._id });
         if (reviews.length > 0) {
             const totalRating = reviews.reduce((acc, review) => acc + review.rating, 0);
@@ -20,17 +21,19 @@ router.post("/create-product", async (req, res) => {
             savedProduct.rating = averageRating;
             await savedProduct.save();
         }
+
         res.status(201).send(savedProduct);
     } catch (error) {
-        console.error("error creating new product");
+        console.error("Error creating new product:", error.message);
         res.status(500).json({ error: error.message });
     }
-})
+});
 
-// get all products
+// Get all products with filters and pagination
 router.get("/", async (req, res) => {
     try {
         const { category, color, minPrice, maxPrice, page = 1, limit = 10 } = req.query;
+
         let filter = {};
         if (category && category !== "all") {
             filter.category = category;
@@ -42,52 +45,56 @@ router.get("/", async (req, res) => {
             const min = parseFloat(minPrice);
             const max = parseFloat(maxPrice);
             if (!isNaN(min) && !isNaN(max)) {
-                filter.price = { $gte: min, $lte: max }
+                filter.price = { $gte: min, $lte: max };
             }
         }
+
         const skip = (parseInt(page) - 1) * parseInt(limit);
         const totalProducts = await Products.countDocuments(filter);
         const totalPages = Math.ceil(totalProducts / parseInt(limit));
+
         const products = await Products.find(filter)
             .skip(skip)
             .limit(parseInt(limit))
-            .populate("author", "email")
+            .populate("author", "email username") // Populate author with additional fields like username
             .sort({ createdAt: -1 });
 
         res.status(200).send({ products, totalPages, totalProducts });
 
     } catch (error) {
-        console.error("error fetching  product");
+        console.error("Error fetching products:", error.message);
         res.status(500).json({ error: error.message });
     }
-})
+});
 
-// get single product
+// Get a single product with its reviews
 router.get("/:id", async (req, res) => {
     try {
         const productId = req.params.id;
         const product = await Products.findById(productId).populate("author", "email username");
+
         if (!product) {
             return res.status(404).send({ message: "Product not found" });
         }
+
         const reviews = await Reviews.find({ productId }).populate("userId", "username email");
         res.status(200).send({ product, reviews });
     } catch (error) {
-        console.error("error fetching the product");
+        console.error("Error fetching the product:", error.message);
         res.status(500).json({ error: error.message });
     }
-})
+});
 
-// update a product
+// Update a product (Admin only)
 router.patch("/update-product/:id", verifyAdmin, async (req, res) => {
     try {
         const productId = req.params.id;
         const product = await Products.findById(productId);
+
         if (!product) {
             return res.status(404).send({ message: "Product not found" });
         }
 
-        // ✅ Now update the product
         const updatedProduct = await Products.findByIdAndUpdate(
             productId,
             { ...req.body },
@@ -99,12 +106,12 @@ router.patch("/update-product/:id", verifyAdmin, async (req, res) => {
             product: updatedProduct
         });
     } catch (error) {
-        console.error("error updating the product:", error.message);
+        console.error("Error updating the product:", error.message);
         res.status(500).json({ error: error.message });
     }
 });
 
-// delete reviews related to the product
+// Delete a product and its related reviews
 router.delete('/:id', async (req, res) => {
     try {
         const productId = req.params.id;
@@ -113,32 +120,35 @@ router.delete('/:id', async (req, res) => {
         if (!deletedProduct) {
             return res.status(404).send({ message: "Product not found" });
         }
-        await Reviews.deleteMany({ productId: productId });
+
+        await Reviews.deleteMany({ productId });
         res.status(200).send({
             message: "Product deleted successfully"
         });
     } catch (error) {
-        console.error("error deleting the product:", error.message);
+        console.error("Error deleting the product:", error.message);
         res.status(500).json({ error: error.message });
     }
-})
+});
 
-// get related products
+// Get related products based on name and category
 router.get("/related/:id", async (req, res) => {
     try {
         const { id } = req.params;
+
         if (!id) {
-            return res.status(400).send({ message: "Product Id is required" });
+            return res.status(400).send({ message: "Product ID is required" });
         }
+
         const product = await Products.findById(id);
-        if
-            (!product) {
-            return res.status(404).send({ message: "Product not found" })
+
+        if (!product) {
+            return res.status(404).send({ message: "Product not found" });
         }
 
         const titleRegex = new RegExp(
             product.name
-                .split("")
+                .split(" ")
                 .filter((word) => word.length > 1)
                 .join("|"),
             "i"
@@ -155,8 +165,9 @@ router.get("/related/:id", async (req, res) => {
         res.status(200).send(relatedProducts);
 
     } catch (error) {
-        console.error("error fetching the related product:", error.message);
+        console.error("Error fetching related products:", error.message);
         res.status(500).json({ error: error.message });
     }
-})
+});
+
 module.exports = router;
