@@ -10,12 +10,12 @@ const ProductSchema = new mongoose.Schema({
     category: {
         type: String,
         required: [true, 'Product category is required'],
-        enum: ['Electronics', 'Fashion', 'Home', 'Books', 'Toys', 'Sports', 'Beauty', 'Cosmetics'],  // Add new category
-        default: 'Electronics'
+        enum: ['electronics', 'dress', 'home', 'books', 'toys', 'sports', 'beauty', 'cosmetics'],  // Add new category
+        default: 'electronics'
     },
     color: {
         type: String,
-        enum: ['Red', 'Blue', 'Green', 'Black', 'White', 'Beige'],  // Add new color
+        enum: ['Red', 'Blue', 'Green', 'Black', 'White', 'beige'],  // Add new color
         default: 'Black'
     },
     description: {
