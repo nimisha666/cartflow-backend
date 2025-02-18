@@ -10,8 +10,13 @@ const ProductSchema = new mongoose.Schema({
     category: {
         type: String,
         required: [true, 'Product category is required'],
-        enum: ['Electronics', 'Fashion', 'Home', 'Books', 'Toys', 'Sports', 'Beauty'],  // Example categories
+        enum: ['Electronics', 'Fashion', 'Home', 'Books', 'Toys', 'Sports', 'Beauty', 'Cosmetics'],  // Add new category
         default: 'Electronics'
+    },
+    color: {
+        type: String,
+        enum: ['Red', 'Blue', 'Green', 'Black', 'White', 'Beige'],  // Add new color
+        default: 'Black'
     },
     description: {
         type: String,
@@ -31,11 +36,6 @@ const ProductSchema = new mongoose.Schema({
     image: {
         type: String,
         required: [true, 'Product image URL is required']
-    },
-    color: {
-        type: String,
-        enum: ['Red', 'Blue', 'Green', 'Black', 'White'],  // Example color options
-        default: 'Black'
     },
     rating: {
         type: Number,
