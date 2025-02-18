@@ -4,11 +4,11 @@ const router = express.Router();
 const authRoutes = require('../users/user.route');
 const productRoutes = require('../products/products.route');
 const reviewRoutes = require('../reviews/reviews.router');
-const adminRoutes = require('../admin.routes'); // Ensure this matches the filename
-const orderRoutes = require('../orders/order.routes'); // Ensure the correct path
+const adminRoutes = require('../routes/admin.routes'); // Ensure correct path
+const orderRoutes = require('../orders/order.routes'); // Ensure correct path
 
-// Define all routes under /api path
-router.use('/orders', orderRoutes);  // This enables `/api/orders`
+// ✅ Define all routes under `/api`
+router.use('/orders', orderRoutes);  // Enables `/api/orders`
 router.use('/admin', adminRoutes);
 router.use('/auth', authRoutes);
 router.use('/products', productRoutes);
