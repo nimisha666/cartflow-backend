@@ -48,15 +48,7 @@ app.use('/api', apiRouter);  // This integrates all routes under `/api`
 
 // ✅ Root Route 
 app.get('/', (req, res) => {
-    res.send(`
-        ✅ Server is running... <br><br>
-        Available API Endpoints: <br>
-        🔹 <a href="/api/auth">/api/auth</a> - User Authentication <br>
-        🔹 <a href="/api/products">/api/products</a> - Product Management <br>
-        🔹 <a href="/api/orders">/api/orders</a> - Order Management <br>
-        🔹 <a href="/api/reviews">/api/reviews</a> - Reviews and Ratings <br>
-        🔹 <a href="/api/admin">/api/admin</a> - Admin Dashboard <br>
-    `);
+    res.send('✅ Server is running...');
 });
 
 // ✅ Start Server
