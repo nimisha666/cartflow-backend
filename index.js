@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // ✅ CORS Configuration
 app.use(cors({
-    origin: ['https://cartflow-ecommerce-hgwv-nimisha666s-projects.vercel.app', 'http://localhost:5173'],
+    origin: ['https://cartflow-ecommerce-hgwv-nimisha666s-projects.vercel.app', 'https://cartflow-ecommerce-hgwv-ia6icfl4p-nimisha666s-projects.vercel.app'],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -42,9 +42,8 @@ async function connectDB() {
 connectDB();
 
 // ✅ Import Routes
-const apiRouter = require('./src/routes/index');  // Import the main API routes file
-
-app.use('/api', apiRouter);  // This integrates all routes under `/api`
+const routes = require('./src/users/user.route');
+app.use('/api', routes);
 
 // ✅ Root Route 
 app.get('/', (req, res) => {
