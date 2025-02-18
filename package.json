@@ -4,8 +4,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "start:dev": "nodemon index.js",
-    "build": "babel src -d dist"
+    "start:dev": "nodemon index.js"
   },
   "keywords": [],
   "author": "nisha",

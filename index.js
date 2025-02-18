@@ -17,16 +17,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // ✅ CORS Configuration
 app.use(cors({
-    origin: ['https://cartflow-ecommerce-hgwv-nimisha666s-projects.vercel.app', 'https://cartflow-ecommerce-hgwv-ia6icfl4p-nimisha666s-projects.vercel.app'],
+    origin: ['https://cartflow-ecommerce-hgwv-nimisha666s-projects.vercel.app', 'http://localhost:5173'],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     optionsSuccessStatus: 200,
 }));
 
-// ✅ Import Routes (After Middleware)
-const authRoutes = require('./src/users/user.route');
-app.use('/api/auth', authRoutes);
 
 // ✅ MongoDB Connection with Retry Logic
 async function connectDB() {
