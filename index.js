@@ -24,6 +24,10 @@ app.use(cors({
     optionsSuccessStatus: 200,
 }));
 
+// ✅ Import Routes (After Middleware)
+const authRoutes = require('./src/users/user.route');
+app.use('/api/auth', authRoutes);
+
 // ✅ MongoDB Connection with Retry Logic
 async function connectDB() {
     console.log("🔹 Attempting to connect to MongoDB...");
@@ -45,7 +49,7 @@ connectDB();
 const routes = require('./src/users/user.route');
 app.use('/api', routes);
 
-// ✅ Root Route 
+// ✅ Root Route
 app.get('/', (req, res) => {
     res.send('✅ Server is running...');
 });
