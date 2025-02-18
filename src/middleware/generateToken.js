@@ -1,18 +1,13 @@
 const jwt = require('jsonwebtoken');
-const User = require('../users/user.model');
-const { use } = require('../users/user.route');
-const JWT_SECRET = process.env.JWT_SECRET_KEY;
 
-const generateToken = async (userId) => {
-    try {
-        const user = await User.findById(userId);
-        if (!user) {
-            throw new Error("user not found.");
-        }
-        const token = jwt.sign({ userId: user._id, role: user.role }, JWT_SECRET, { expiresIn: '1h', });
-        return token;
-    } catch (error) {
+const JWT_SECRET = process.env.JWT_SECRET_KEY; // Ensure this is set in your .env
 
-    }
+const generateToken = (userId, role) => {
+    return jwt.sign(
+        { userId, role },
+        JWT_SECRET,
+        { expiresIn: '1h' }  // Token expires in 1 hour
+    );
 };
+
 module.exports = generateToken;

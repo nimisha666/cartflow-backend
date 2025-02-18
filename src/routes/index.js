@@ -9,7 +9,7 @@ const orderRoutes = require('../orders/order.routes');
 
 // ✅ Define all routes under `/api`
 router.use('/auth', authRoutes);
-router.use('/products', productRoutes);  // ✅ This will be `/api/products`
+router.use('/products', productRoutes);
 router.use('/orders', orderRoutes);
 router.use('/admin', adminRoutes);
 router.use('/reviews', reviewRoutes);

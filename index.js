@@ -43,7 +43,7 @@ async function connectDB() {
 connectDB();
 
 // ✅ Import Routes
-const routes = require('./src/users/user.route');
+const routes = require('./src/routes/index');
 app.use('/api', routes);
 
 // ✅ Root Route

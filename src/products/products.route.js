@@ -7,10 +7,18 @@ const router = express.Router();
 // Post a product
 router.post("/create-product", async (req, res) => {
     try {
+        // Validate the required fields
+        const { name, price, category, author, description } = req.body;
+        if (!name || !price || !category || !author || !description) {
+            return res.status(400).json({ message: "All fields are required" });
+        }
+
+        // Create a new product with the provided data
         const newProduct = new Products({
             ...req.body
         });
 
+        // Save the new product
         const savedProduct = await newProduct.save();
 
         // Calculate average rating if reviews exist
@@ -22,6 +30,7 @@ router.post("/create-product", async (req, res) => {
             await savedProduct.save();
         }
 
+        // Respond with the created product
         res.status(201).send(savedProduct);
     } catch (error) {
         console.error("Error creating new product:", error.message);
@@ -29,11 +38,11 @@ router.post("/create-product", async (req, res) => {
     }
 });
 
-// Get all products with filters and pagination
 router.get("/", async (req, res) => {
     try {
         const { category, color, minPrice, maxPrice, page = 1, limit = 10 } = req.query;
 
+        // Build the filter
         let filter = {};
         if (category && category !== "all") {
             filter.category = category;
@@ -49,16 +58,19 @@ router.get("/", async (req, res) => {
             }
         }
 
+        // Pagination calculation
         const skip = (parseInt(page) - 1) * parseInt(limit);
         const totalProducts = await Products.countDocuments(filter);
         const totalPages = Math.ceil(totalProducts / parseInt(limit));
 
+        // Fetch products with the applied filter and pagination
         const products = await Products.find(filter)
             .skip(skip)
             .limit(parseInt(limit))
-            .populate("author", "email username") // Populate author with additional fields like username
+            .populate("author", "email username")  // Populate author with additional fields like username
             .sort({ createdAt: -1 });
 
+        // Send response with products and pagination data
         res.status(200).send({ products, totalPages, totalProducts });
 
     } catch (error) {
@@ -67,23 +79,28 @@ router.get("/", async (req, res) => {
     }
 });
 
-// Get a single product with its reviews
 router.get("/:id", async (req, res) => {
     try {
         const productId = req.params.id;
+
+        // Fetch the product and its author data
         const product = await Products.findById(productId).populate("author", "email username");
 
         if (!product) {
             return res.status(404).send({ message: "Product not found" });
         }
 
+        // Fetch the reviews related to the product
         const reviews = await Reviews.find({ productId }).populate("userId", "username email");
+
+        // Respond with the product and its reviews
         res.status(200).send({ product, reviews });
     } catch (error) {
         console.error("Error fetching the product:", error.message);
         res.status(500).json({ error: error.message });
     }
 });
+
 
 // Update a product (Admin only)
 router.patch("/update-product/:id", verifyAdmin, async (req, res) => {
