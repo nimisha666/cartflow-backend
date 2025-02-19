@@ -1,4 +1,3 @@
-
 const { Schema, model } = require('mongoose');
 const bcrypt = require("bcryptjs");
 
@@ -10,10 +9,12 @@ const userSchema = new Schema({
     profileImage: String,
     bio: { type: String, maxlength: 200 },
     profession: String,
+    mobile: { type: String, required: false },  // ✅ Added mobile field
+    gender: { type: String, enum: ["male", "female", "other"], required: false }, // ✅ Added gender field
     createdAt: { type: Date, default: Date.now }
 });
 
-// ✅ Corrected: Hash password before saving
+// ✅ Hash password before saving
 userSchema.pre('save', async function (next) {
     const user = this;
     if (!user.isModified('password')) return next();
@@ -23,10 +24,9 @@ userSchema.pre('save', async function (next) {
         next();
     } catch (error) {
         console.error("Error hashing password:", error);
-        next(error);  // ✅ Pass error to Mongoose
+        next(error);
     }
 });
-
 
 const User = model('User', userSchema);
 module.exports = User;

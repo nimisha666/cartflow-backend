@@ -9,14 +9,14 @@ const router = express.Router();
 // ✅ Register Route
 router.post('/register', async (req, res) => {
     try {
-        const { username, email, password } = req.body;
+        const { username, email, password, mobile, gender } = req.body;
         const existingUser = await User.findOne({ email });
 
         if (existingUser) {
             return res.status(400).json({ message: 'User already exists' });
         }
 
-        const newUser = new User({ username, email, password });
+        const newUser = new User({ username, email, password, mobile, gender });
         await newUser.save();
 
         res.status(201).json({ message: 'User registered successfully' });
@@ -118,23 +118,25 @@ router.put('/users/:id', async (req, res) => {
 // update user profile
 router.patch('/edit-profile', async (req, res) => {
     try {
-        const { userId, username, profileImage, bio, profession } = req.body;
+        const { userId, username, profileImage, bio, profession, mobile, gender } = req.body;
         if (!userId) {
-            return res.status(400).send({ message: 'User id is required' })
+            return res.status(400).send({ message: 'User id is required' });
         }
         const user = await User.findById(userId);
         if (!user) {
-            return res.status(400).send({ message: 'User npt found' })
+            return res.status(400).send({ message: 'User not found' });
         }
         // update profile
         if (username !== undefined) user.username = username;
         if (profileImage !== undefined) user.profileImage = profileImage;
         if (bio !== undefined) user.bio = bio;
         if (profession !== undefined) user.profession = profession;
+        if (mobile !== undefined) user.mobile = mobile;
+        if (gender !== undefined) user.gender = gender;
 
         await user.save();
         res.status(200).send({
-            message: 'Profile update successfuly',
+            message: 'Profile updated successfully',
             user: {
                 _id: user._id,
                 email: user.email,
@@ -142,13 +144,15 @@ router.patch('/edit-profile', async (req, res) => {
                 role: user.role,
                 profileImage: user.profileImage,
                 bio: user.bio,
-                profession: user.profession
+                profession: user.profession,
+                mobile: user.mobile,
+                gender: user.gender
             }
-        })
+        });
     } catch (error) {
         console.error("Error updating user profile:", error);
         res.status(500).json({ message: "Error updating user profile" });
     }
-})
+});
 
 module.exports = router;
