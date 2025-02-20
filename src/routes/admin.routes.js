@@ -4,7 +4,7 @@ const Products = require('../products/products.model');
 const verifyAdmin = require('../middleware/verifyAdmin');
 const router = express.Router();
 
-// ✅ Get all orders
+// Get all orders
 router.get('/orders', verifyAdmin, async (req, res) => {
     try {
         const orders = await Orders.find()
@@ -18,7 +18,7 @@ router.get('/orders', verifyAdmin, async (req, res) => {
     }
 });
 
-// ✅ Update order status
+// Update order status
 router.patch('/orders/:id', verifyAdmin, async (req, res) => {
     try {
         const { id } = req.params;
@@ -46,7 +46,7 @@ router.patch('/orders/:id', verifyAdmin, async (req, res) => {
     }
 });
 
-// ✅ Get all products
+// Get all products
 router.get('/products', verifyAdmin, async (req, res) => {
     try {
         const products = await Products.find();
@@ -57,7 +57,7 @@ router.get('/products', verifyAdmin, async (req, res) => {
     }
 });
 
-// ✅ Update product details
+// Update product details
 router.patch('/products/:id', verifyAdmin, async (req, res) => {
     try {
         const { id } = req.params;
@@ -74,7 +74,7 @@ router.patch('/products/:id', verifyAdmin, async (req, res) => {
     }
 });
 
-// ✅ Delete a product
+// Delete a product
 router.delete('/products/:id', verifyAdmin, async (req, res) => {
     try {
         const { id } = req.params;

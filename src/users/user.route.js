@@ -6,7 +6,7 @@ const generateToken = require('../middleware/generateToken');
 
 const router = express.Router();
 
-// ✅ Register Route
+// Register Route
 router.post('/register', async (req, res) => {
     try {
         const { username, email, password, mobile, gender } = req.body;
@@ -26,7 +26,7 @@ router.post('/register', async (req, res) => {
     }
 });
 
-// ✅ Login Route
+// Login Route
 router.post('/login', async (req, res) => {
     try {
         const { email, password } = req.body;

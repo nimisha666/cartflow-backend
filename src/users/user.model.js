@@ -14,7 +14,7 @@ const userSchema = new Schema({
     createdAt: { type: Date, default: Date.now }
 });
 
-// ✅ Hash password before saving
+// Hash password before saving
 userSchema.pre('save', async function (next) {
     const user = this;
     if (!user.isModified('password')) return next();

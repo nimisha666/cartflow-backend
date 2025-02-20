@@ -8,14 +8,14 @@ const bodyParser = require('body-parser');
 const app = express();
 const port = process.env.PORT || 5000;
 
-// ✅ Middleware
+// Middleware
 app.use(express.json({ limit: "25mb" }));
 app.use(express.urlencoded({ limit: "25mb", extended: true }));
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// ✅ CORS Configuration
+// CORS Configuration
 app.use(cors({
     origin: ['https://cartflow-ecommerce-hgwv-nimisha666s-projects.vercel.app', 'http://localhost:5173'],
     credentials: true,
@@ -25,7 +25,7 @@ app.use(cors({
 }));
 
 
-// ✅ MongoDB Connection with Retry Logic
+// MongoDB Connection with Retry Logic
 async function connectDB() {
     console.log("🔹 Attempting to connect to MongoDB...");
     console.log("🔹 DB URL:", process.env.DB_URL); // Debugging
@@ -42,16 +42,16 @@ async function connectDB() {
 
 connectDB();
 
-// ✅ Import Routes
+// Import Routes
 const routes = require('./src/routes/index');
 app.use('/api', routes);
 
-// ✅ Root Route
+// Root Route
 app.get('/', (req, res) => {
     res.send('✅ Server is running...');
 });
 
-// ✅ Start Server
+// Start Server
 app.listen(port, () => {
     console.log(`🚀 Server running on port ${port}`);
 });
