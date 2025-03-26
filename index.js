@@ -24,27 +24,27 @@ app.use(cors({
     optionsSuccessStatus: 200,
 }));
 
-
-// MongoDB Connection with Retry Logic
+// ✅ MongoDB Connection
 async function connectDB() {
     console.log("🔹 Attempting to connect to MongoDB...");
-    console.log("🔹 DB URL:", process.env.DB_URL); // Debugging
 
     try {
-        await mongoose.connect(process.env.DB_URL); // ✅ Removed deprecated options
+        await mongoose.connect(process.env.DB_URL);
         console.log("✅ MongoDB successfully connected.");
     } catch (error) {
         console.error("❌ MongoDB connection error:", error.message);
         console.log("🔄 Retrying in 5 seconds...");
-        setTimeout(connectDB, 5000); // Retry after 5 seconds
+        setTimeout(connectDB, 5000);
     }
 }
-
 connectDB();
 
 // Import Routes
 const routes = require('./src/routes/index');
+const orderRoutes = require('./src/orders/order.routes'); // ✅ Added Order Routes Import
+
 app.use('/api', routes);
+app.use('/api/orders', orderRoutes); // ✅ Registered Order Routes
 
 // Root Route
 app.get('/', (req, res) => {

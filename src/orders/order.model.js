@@ -15,11 +15,3 @@ const orderSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model('Order', orderSchema);
-
-// Debugging MongoDB connection
-mongoose.connection.on("connected", () => {
-    console.log("✅ MongoDB is connected.");
-});
-mongoose.connection.on("error", (err) => {
-    console.error("❌ MongoDB connection error:", err);
-});
